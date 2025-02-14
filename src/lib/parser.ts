@@ -30,8 +30,8 @@ function parseType(struct: TypeStruct): ZodTypeAny {
     }
     if (struct.type == "Image") {
         return z.object({
-            src: z.string(),
-            alt: z.string()
+            src: z.string().nullable(),
+            alt: z.string().nullable()
         }).nullable();
     }
     if (struct.type == "Group") {
