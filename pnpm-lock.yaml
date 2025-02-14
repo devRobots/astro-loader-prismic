@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@prismicio/client':
+        specifier: ^7.16.0
+        version: 7.16.0
       astro:
-        specifier: ^5.3.0
+        specifier: 5.3.0
         version: 5.3.0(rollup@4.34.7)(typescript@5.7.3)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
 
 packages:
 
@@ -323,6 +329,10 @@ packages:
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
+
+  '@prismicio/client@7.16.0':
+    resolution: {integrity: sha512-oKBkkOuRYujdiUgn5fs8qAPZJzJ44FYMFwFCY1iw/ODQ1UhOFh6uUJzgcKe4TPlw1mhRvsNOlJlmW2NTZmrFFg==}
+    engines: {node: '>=14.15.0'}
 
   '@rollup/pluginutils@5.1.4':
     resolution: {integrity: sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==}
@@ -786,6 +796,10 @@ packages:
 
   http-cache-semantics@4.1.1:
     resolution: {integrity: sha512-er295DKPVsV82j5kw1Gjt+ADA/XYHsajl82cGNQG2eyoPkvgUhX+nDIyelzhIWbbsXP39EHcI6l5tYs2FYqYXQ==}
+
+  imgix-url-builder@0.0.5:
+    resolution: {integrity: sha512-dCx3UlXghtsjySoqVCcHQHRikqDummwQEfKlxBUK/wrMzd+1ox/XX+zhqVuXKMVuZvCc84pVLEJyntQB0OOi/w==}
+    engines: {node: '>=12.7.0'}
 
   import-meta-resolve@4.1.0:
     resolution: {integrity: sha512-I6fiaX09Xivtk+THaMfAwnA3MVA5Big1WHF1Dfx9hFuvNIWpXnorlkzhcQf6ehrqQiiZECRt1poOAkPmer3ruw==}
@@ -1716,6 +1730,10 @@ snapshots:
 
   '@oslojs/encoding@1.1.0': {}
 
+  '@prismicio/client@7.16.0':
+    dependencies:
+      imgix-url-builder: 0.0.5
+
   '@rollup/pluginutils@5.1.4(rollup@4.34.7)':
     dependencies:
       '@types/estree': 1.0.6
@@ -2286,6 +2304,8 @@ snapshots:
   html-void-elements@3.0.0: {}
 
   http-cache-semantics@4.1.1: {}
+
+  imgix-url-builder@0.0.5: {}
 
   import-meta-resolve@4.1.0: {}
 
