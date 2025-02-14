@@ -1,5 +1,6 @@
 import type { Loader } from "astro/loaders";
 import { createClient } from "@prismicio/client";
+import { defineCollection } from "astro:content";
 
 import { schematize } from "./lib/parser.ts";
 import { collectionLoader } from "./lib/loader.ts";
@@ -7,7 +8,7 @@ import { collectionLoader } from "./lib/loader.ts";
 
 const API_ENDPOINT = "https://customtypes.prismic.io/customtypes";
 
-export default async function PrismicLoader(
+export async function PrismicLoader(
     { repository, accessToken }: LoaderParams
 ): Promise<Record<string, Loader>> {
     const request = await fetch(API_ENDPOINT, {
@@ -29,7 +30,9 @@ export default async function PrismicLoader(
         const name = page.id;
         const metadata = page.json.Main;
         const schema = schematize(metadata);
-        loaders[name] = collectionLoader(client, name, schema);
+        loaders[name] = defineCollection({
+            loader: collectionLoader(client, name, schema)
+        });
     }
 
     return loaders
