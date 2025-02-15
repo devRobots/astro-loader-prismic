@@ -30,7 +30,7 @@ function parseType(struct: TypeStruct): ZodTypeAny {
     }
     if (struct.type == "Image") {
         return z.object({
-            src: z.string().nullable(),
+            url: z.string().nullable(),
             alt: z.string().nullable()
         }).nullable();
     }
