@@ -16,8 +16,7 @@ function parseType(struct: TypeStruct): ZodTypeAny {
     if (struct.type == "Boolean") return z.boolean().nullable().default(false);
     if (struct.type == "Number") return z.number().default(0);
     if (struct.type == "StructuredText") {
-        if ("single" in struct.config) return z.string().nullable();
-        else return z.object({
+        return z.object({
             text: z.string(),
             rendered: z.string()
         }).nullable()
