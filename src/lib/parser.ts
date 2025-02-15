@@ -13,7 +13,7 @@ export function schematize(metadata: any) {
 }
 
 function parseType(struct: TypeStruct): ZodTypeAny {
-    if (struct.type == "Boolean") return z.boolean().default(false);
+    if (struct.type == "Boolean") return z.boolean().nullable().default(false);
     if (struct.type == "Number") return z.number().default(0);
     if (struct.type == "StructuredText") {
         if ("single" in struct.config) return z.string().nullable();
@@ -35,11 +35,7 @@ function parseType(struct: TypeStruct): ZodTypeAny {
         }).nullable();
     }
     if (struct.type == "Group") {
-        const subschema: Record<string, z.ZodTypeAny> = {}
-        for (let subtype in struct.config.fields) {
-            subschema[subtype] = parseType(struct.config.fields[subtype]);
-        }
-        return z.array(z.object(subschema));
+        return z.array(z.any());
     }
 
     return z.any();
@@ -73,7 +69,10 @@ function parseField(field: any): any {
     }
     if (field.length == 1) {
         const [subfield] = field;
-        if ("text" in subfield) return subfield.text
+        if ("text" in subfield) return {
+            text: asText(field),
+            rendered: asHTML(field)
+        }
         else return [parsePrismicDoc(subfield)]
     }
     if ("text" in field[0]) {
