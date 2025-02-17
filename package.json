@@ -2,7 +2,7 @@
   "name": "astro-loader-prismic",
   "type": "module",
   "author": "DevRobot <ysrosast@gmail.com> (https://github.com/devRobots)",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "A simple loader to load data from a Prismic CMS into Astro using the Astro Loader API introduced in Astro 5.",
   "main": "src/index.ts",
   "module": "src/index.ts",

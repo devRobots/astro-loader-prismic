@@ -3,7 +3,7 @@ import { createClient } from "@prismicio/client";
 import { defineCollection } from "astro:content";
 
 import { schematize } from "./lib/parser.ts";
-import { collectionLoader } from "./lib/loader.ts";
+import { collectionLoader, pageLoader } from "./lib/loader.ts";
 
 
 const API_ENDPOINT = "https://customtypes.prismic.io/customtypes";
@@ -19,16 +19,23 @@ export async function PrismicLoader(
     });
     const response: TypeResponse[] = await request.json();
 
+    const pageTypes = response.filter(
+        (i: TypeResponse) => i.id.includes("page")
+    );
     const collectionTypes = response.filter(
         (i: TypeResponse) => i.repeatable == true
     );
 
     const client = createClient(`https://${repository}.cdn.prismic.io/api/v2`)
     const loaders: Record<string, Loader> = {}
+    
+    loaders["page"] = defineCollection({
+        loader: pageLoader(client, pageTypes)
+    });
 
-    for (let page of collectionTypes) {
-        const name = page.id;
-        const metadata = page.json.Main;
+    for (let collection of collectionTypes) {
+        const name = collection.id;
+        const metadata = collection.json.Main;
         const schema = schematize(metadata);
         loaders[name] = defineCollection({
             loader: collectionLoader(client, name, schema)

@@ -9,14 +9,13 @@ In your content configuration file, you can use the PrismicLoader function to us
 
 ```ts
 import { PrismicLoader } from "astro-loader-prismic";
-import { defineCollection } from "astro:content";
 
-export const collections = { 
-    ...PrismicLoader({
-        repository: "respository-name",
-        accessToken: "access-token"
-    })
- };
+const loaders = await PrismicLoader({
+    repository: "respository-name",
+    accessToken: "access-token"
+});
+
+export const collections = { ...loaders };
 ```
 
 Remember that due to the nature Astros Content Layer lifecycle, the loader will only fetch entries at build time, even when using on-demand rendering. If you want to update your deployed site with new entries, you need to rebuild it.
