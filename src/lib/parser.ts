@@ -67,6 +67,7 @@ function parseField(field: any): any {
         else return { id, slug };
     }
     if (field.length == 1) {
+        if (!field[0]) return null;
         const [subfield] = field;
         if ("text" in subfield) return {
             text: asText(field),
