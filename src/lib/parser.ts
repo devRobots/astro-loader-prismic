@@ -75,6 +75,9 @@ function parseField(field: any): any {
         }
         else return [parsePrismicDoc(subfield)]
     }
+
+    if (!field[0]) return null
+    if (Object.keys(field[0]).length == 0) return null
     if ("text" in field[0]) {
         const text = asText(field)
         const rendered = asHTML(field)
