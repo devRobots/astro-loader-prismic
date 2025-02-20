@@ -49,23 +49,22 @@ export function parsePrismicDoc(
         const metadata = data_[field];
         const datatype = schema[field];
 
-        if (!metadata || Object.keys(field).length == 0) {
+        if (!metadata || Object.keys(metadata).length == 0) {
             data[field] = null;
         } else if (datatype.type == "Group") {
             const array = [];
-            for (let item in metadata) {
-                array.push(
-                    parsePrismicDoc(metadata[item], datatype.config.fields)
-                );
+            for (let item of metadata) {
+                array.push(parsePrismicDoc(item, datatype.config.fields));
             }
-            data[field] = array
+            data[field] = array;
         } else if (datatype.type == "Link") {
             const { id, slug } = metadata;
             if (!id) data[field] = null;
             else data[field] = { id, slug };
         } else if (datatype.type == "Image") {
             const { url, alt } = metadata;
-            data[field] = { url, alt }
+            if (url) data[field] = { url, alt }
+            else data[field] = null
         } else if (datatype.type == "StructuredText") {
             const isSingle = "single" in datatype.config;
             if (isSingle) data[field] = asText(metadata);
@@ -73,9 +72,7 @@ export function parsePrismicDoc(
                 text: asText(metadata),
                 rendered: asHTML(metadata)
             }
-        } else {
-            data[field] = metadata
-        }
+        } else data[field] = metadata;
     }
 
     return data
