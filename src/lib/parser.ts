@@ -49,7 +49,7 @@ export function parsePrismicDoc(
         const metadata = data_[field];
         const datatype = schema[field];
 
-        if (!metadata || Object.keys(metadata).length == 0) {
+        if (!metadata || !datatype) {
             data[field] = null;
         } else if (datatype.type == "Group") {
             const array = [];
@@ -73,7 +73,7 @@ export function parsePrismicDoc(
                 rendered: asHTML(metadata)
             }
         } else data[field] = metadata;
-    }
+}
 
-    return data
+return data
 }
