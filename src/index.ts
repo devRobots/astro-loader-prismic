@@ -38,7 +38,7 @@ export async function PrismicLoader(
         const metadata = collection.json.Main;
         const schema = schematize(metadata);
         loaders[name] = defineCollection({
-            loader: collectionLoader(client, name, schema)
+            schema, loader: collectionLoader(client, name, metadata)
         });
     }
 

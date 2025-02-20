@@ -19,7 +19,7 @@ function parseType(struct: TypeStruct): ZodTypeAny {
         return z.object({
             text: z.string(),
             rendered: z.string()
-        }).nullable()
+        }).or(z.string()).nullable()
     }
     if (struct.type == "Link") {
         return z.object({
@@ -40,53 +40,43 @@ function parseType(struct: TypeStruct): ZodTypeAny {
     return z.any();
 }
 
-export function parsePrismicDoc(data_: Record<string, any>):
-    Record<string, any> {
+export function parsePrismicDoc(
+    data_: Record<string, any>, schema: Record<string, any>
+): Record<string, any> {
     const data: Record<string, any> = {}
 
     for (let field in data_) {
         const metadata = data_[field];
+        const datatype = schema[field];
 
-        if (typeof metadata == "object") data[field] = parseField(metadata)
-        else data[field] = metadata
+        if (!metadata || Object.keys(field).length == 0) {
+            data[field] = null;
+        } else if (datatype.type == "Group") {
+            const array = [];
+            for (let item in metadata) {
+                array.push(
+                    parsePrismicDoc(metadata[item], datatype.config.fields)
+                );
+            }
+            data[field] = array
+        } else if (datatype.type == "Link") {
+            const { id, slug } = metadata;
+            if (!id) data[field] = null;
+            else data[field] = { id, slug };
+        } else if (datatype.type == "Image") {
+            const { url, alt } = metadata;
+            data[field] = { url, alt }
+        } else if (datatype.type == "StructuredText") {
+            const isSingle = "single" in datatype.config;
+            if (isSingle) data[field] = asText(metadata);
+            else data[field] = {
+                text: asText(metadata),
+                rendered: asHTML(metadata)
+            }
+        } else {
+            data[field] = metadata
+        }
     }
 
     return data
-}
-
-function parseField(field: any): any {
-    if (!field) return null
-    if (Object.keys(field).length == 0) return null
-    if ("url" in field && "alt" in field) {
-        const { url, alt } = field;
-        return { url, alt }
-    }
-    if ("link_type" in field && field.link_type == "Document") {
-        const { id, slug } = field;
-        if (!id) return null;
-        else return { id, slug };
-    }
-    if (field.length == 1) {
-        if (!field[0]) return null;
-        const [subfield] = field;
-        if ("text" in subfield) return {
-            text: asText(field),
-            rendered: asHTML(field)
-        }
-        else return [parsePrismicDoc(subfield)]
-    }
-
-    if (!field[0]) return null
-    if (Object.keys(field[0]).length == 0) return null
-    if ("text" in field[0]) {
-        const text = asText(field)
-        const rendered = asHTML(field)
-        return { text, rendered }
-    }
-
-    const array = []
-    for (let subfield of field) {
-        array.push(parsePrismicDoc(subfield))
-    }
-    return array
 }
