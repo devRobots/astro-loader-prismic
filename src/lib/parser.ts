@@ -62,18 +62,20 @@ export function parsePrismicDoc(
 
             const sliceTypes = datatype.config.choices;
             for (let slice of metadata) {
+                const type = slice.slice_type;
+
                 const main = parsePrismicDoc(
-                    slice.primary, sliceTypes[slice.slice_type]["non-repeat"]
+                    slice.primary, sliceTypes[type]["non-repeat"]
                 )
 
                 const items = [];
                 for (let item of slice.items) {
                     items.push(
-                        parsePrismicDoc(item, sliceTypes[slice.slice_type].repeat)
+                        parsePrismicDoc(item, sliceTypes[type].repeat)
                     );
                 }
 
-                slices.push({ ...main, items })
+                slices.push({ ...main, items, type })
             }
 
             data[field] = slices;
