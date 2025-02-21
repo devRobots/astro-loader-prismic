@@ -57,6 +57,26 @@ export function parsePrismicDoc(
                 array.push(parsePrismicDoc(item, datatype.config.fields));
             }
             data[field] = array;
+        } else if (datatype.type == "Slices") {
+            const slices = [];
+
+            const sliceTypes = datatype.config.choices;
+            for (let slice of metadata) {
+                const main = parsePrismicDoc(
+                    slice.primary, sliceTypes[slice.slice_type]["non-repeat"]
+                )
+
+                const items = [];
+                for (let item of slice.items) {
+                    items.push(
+                        parsePrismicDoc(item, sliceTypes[slice.slice_type].repeat)
+                    );
+                }
+
+                slices.push({ ...main, items })
+            }
+
+            data[field] = slices;
         } else if (datatype.type == "Link") {
             const { id, slug } = metadata;
             if (!id) data[field] = null;
@@ -73,7 +93,7 @@ export function parsePrismicDoc(
                 rendered: asHTML(metadata)
             }
         } else data[field] = metadata;
-}
+    }
 
-return data
+    return data
 }
