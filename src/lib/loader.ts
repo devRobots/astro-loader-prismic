@@ -16,10 +16,12 @@ export function pageLoader(
 
                 const id = result.id
                 const [slug] = result.slugs;
+                const created_at = result.first_publication_date
+                const updated_at = result.last_publication_date
+                
                 const data_ = result.data;
-
                 const predata = parsePrismicDoc(data_, metadata)
-                const data = { id, slug, ...predata }
+                const data = { id, slug, created_at, updated_at, ...predata }
                 const body = data_.body
 
                 const entry = await parseData({ id: slug, data });
@@ -40,10 +42,12 @@ export function collectionLoader(
             for (let result of results) {
                 const id = result.id
                 const [slug] = result.slugs;
+                const created_at = result.first_publication_date
+                const updated_at = result.last_publication_date
+                
                 const data_ = result.data;
-
                 const predata = parsePrismicDoc(data_, metaschema)
-                const data = { id, slug, ...predata }
+                const data = { id, slug, created_at, updated_at, ...predata }
 
                 const entry = await parseData({ id: slug, data });
                 store.set({ id: slug, data: entry });
